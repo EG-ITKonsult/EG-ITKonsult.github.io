@@ -9,40 +9,58 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-  .bgimg-1 {
-    background-image: url("https://eg-itkonsult.github.io/Images/EG%20IT-Konsult%20AB%20Logga%201920x1200.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Optional: fade overlay */
-  .bgimg-1::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 255, 255, 0.1); /* Change 0.1 to 0.3 or more if you want it more visible */
-    z-index: 0;
-  }
-
-  .w3-display-middle {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-  }
-
-  @media (max-width: 768px) {
     .bgimg-1 {
-      height: 60vh;
-      background-attachment: scroll;
+      background-image: url("https://eg-itkonsult.github.io/Images/EG%20IT-Konsult%20AB%20Logga%201920x1200.png");
+      background-repeat: no-repeat;
+      background-size: cover; /* Ensures the image covers the container */
+      background-position: center;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-  }
-</style>
+  
+    /* Optional: fade overlay */
+    .bgimg-1::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 255, 255, 0.1); /* Adjust overlay visibility */
+      z-index: 0;
+    }
+  
+    .w3-display-middle {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+  
+    /* Adjustments for tablets and smaller screens */
+    @media (max-width: 1024px) {
+      .bgimg-1 {
+        background-size: contain; /* Ensures the entire image is visible */
+        background-position: center;
+        height: 70vh; /* Reduce height for smaller screens */
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .bgimg-1 {
+        background-size: cover; /* Fill the screen while maintaining aspect ratio */
+        background-position: top; /* Focus on the top of the image */
+        height: 60vh; /* Further reduce height for mobile devices */
+      }
+    }
+  
+    @media (max-width: 480px) {
+      .bgimg-1 {
+        background-size: contain; /* Ensure the image fits within the screen */
+        background-position: center;
+        height: 50vh; /* Adjust height for very small screens */
+      }
+    }
+  </style>
 </head>
 <body>
 
