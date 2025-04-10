@@ -20,13 +20,19 @@ body, html {
 
 .bgimg-1 {
   background-image: url("https://eg-itkonsult.github.io/Images/EG%20IT-Konsult%20AB%20Logga%201920x1200.png");
-  background-attachment: scroll;
   background-repeat: no-repeat;
-  background-size: cover;        /* Cover the whole container */
-  background-position: center;   /* Center the image */
-  min-height: 100vh;             /* Full screen height */
+  background-size: cover;        /* Resizes image to always cover */
+  background-position: center center; /* Keeps image centered */
+  background-attachment: fixed;  /* Optional: gives a parallax effect */
+  height: 100vh;                 /* Full viewport height */
+  width: 100vw;                  /* Full viewport width */
 }
 
+@media (max-width: 768px) {
+  .bgimg-1 {
+    background-attachment: scroll;
+  }
+}
 
 .w3-wide {letter-spacing: 10px;}
 .w3-hover-opacity {cursor: pointer;}
