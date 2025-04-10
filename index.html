@@ -9,14 +9,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif;}
-    body, html {
-    height: 100%;
-    color: #000000;
-    line-height: 1.8;
-    background-color: rgb(241, 241, 241);
-    }
-
     .bgimg-1 {
       background-image: url("https://eg-itkonsult.github.io/Images/EG%20IT-Konsult%20AB%20Logga%201920x1080.png");
       background-repeat: no-repeat;
@@ -28,7 +20,15 @@
       align-items: center;
       justify-content: center;
     }
-
+  
+    /* Optional: fade overlay */
+    .bgimg-1::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 255, 255, 0.1); /* Adjust overlay visibility */
+      z-index: 0;
+    }
   
     .w3-display-middle {
       position: relative;
@@ -61,6 +61,17 @@
       }
     }
 
+    #contact .w3-row-padding {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #contact .w3-card {
+    max-width: 400px; /* Optional: Limit the width of the card */
+    margin: 0 auto; /* Center the card horizontally */
+  }
   </style>
 </head>
 <body>
@@ -123,9 +134,9 @@
 
 <!-- Footer -->
 <footer class="w3-center w3-white w3-padding-64 w3-opacity w3-hover-opacity-on">
-  <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
-  <p><a href="mailto:info@egit.se" title="EG IT-Konsult AB" target="_blank" class="w3-hover-opacity">EG IT-Konsult AB</a></p>
-</footer>
+    <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
+    <p><a href="mailto:info@egit.se" title="EG IT-Konsult AB" target="_blank" class="w3-hover-opacity">EG IT-Konsult AB</a></p>
+  </footer>
 
 <script>
 // Change style of navbar on scroll
