@@ -1,78 +1,13 @@
-<!DOCTYPE html>
-<html lang="sv">
 <head>
   <title>EG-IT Konsult AB</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="EG IT-Konsult AB - IT solutions for small businesses and organizations. Specializing in Microsoft services, account management, and client handling.">
+  <meta name="description" content="EG IT-Konsult AB - IT solutions for small businesses and organizations. Specializing in Microsoft Intune, Azure AD, and more.">
+  <meta name="keywords" content="IT, IT-Konsult, Microsoft, Azure, Intune, Jönköping">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-    body {
-    background-color: rgba(236, 230, 230, 0.213);
-    color: #000; /* Black text color for better readability */
-    font-family: 'Lato', sans-serif; /* Ensure consistent font */
-    margin: 0;
-    padding: 0;
-  }
-    .bgimg-1 {
-      background-image: url("https://eg-itkonsult.github.io/Images/EG-IT-Konsult-AB-Logga-1920x1200.png");     /* Corrected to use background-image */
-      background-repeat: no-repeat;
-      background-size: cover; /* Ensures the image covers the container */
-      background-position: center;
-      height: 100vh;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .w3-display-middle {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-
-    /* Adjustments for tablets and smaller screens */
-    @media (max-width: 1024px) {
-      .bgimg-1 {
-        background-size: contain; /* Ensures the entire image is visible */
-        background-position: center;
-        height: 70vh; /* Reduce height for smaller screens */
-      }
-    }
-
-    @media (max-width: 768px) {
-      .bgimg-1 {
-        background-size: cover; /* Fill the screen while maintaining aspect ratio */
-        background-position: top; /* Focus on the top of the image */
-        height: 60vh; /* Further reduce height for mobile devices */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .bgimg-1 {
-        background-size: contain; /* Ensure the image fits within the screen */
-        background-position: center;
-        height: 50vh; /* Adjust height for very small screens */
-      }
-    }
-
-    /* Style adjustments for the contact section */
-    #contact .w3-row-padding {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  #contact .w3-card {
-    max-width: 400px; /* Optional: Limit the width of the card */
-    margin: 0 auto; /* Center the card horizontally */
-  }
-    
-  </style>
+  <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
 </head>
 <body>
  <!-- Navbar (sit on top) -->
@@ -100,8 +35,14 @@
 <!-- First Parallax Image with Logo Text -->
 <div class="bgimg-1 w3-display-container w3-opacity-min" id="home" alt="EG IT-Konsult AB Logo">
   <div class="w3-display-middle" style="white-space:nowrap;">
-  
   </div>
+</div>
+
+<div class="w3-display-bottommiddle arrow-indicator">
+  <a href="#about" aria-label="Scroll down">
+    <i class="fa fa-chevron-down w3-xxlarge w3-hover-opacity"></i>
+  </a>
+</div>
 </div>
 
 <!-- Container (About Section) -->

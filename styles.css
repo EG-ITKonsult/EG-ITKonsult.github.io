@@ -1,0 +1,62 @@
+body {
+    background-color: rgba(236, 230, 230, 0.213);
+    color: #000;
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .bgimg-1 {
+    background-image: url("https://eg-itkonsult.github.io/Images/EG-IT-Konsult-AB-Logga-1920x1200.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .w3-display-middle {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  
+  @media (max-width: 1024px) {
+    .bgimg-1 {
+      background-size: contain;
+      background-position: center;
+      height: 70vh;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .bgimg-1 {
+      background-size: cover;
+      background-position: top;
+      height: 60vh;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .bgimg-1 {
+      background-size: contain;
+      background-position: center;
+      height: 50vh;
+    }
+  }
+  
+  .arrow-indicator {
+    margin-bottom: 20px;
+  }
+  
+  .arrow-indicator a {
+    color: #6c6c6c;
+    text-decoration: none;
+  }
+  
+  .arrow-indicator a:hover {
+    color: #bcbcbc;
+  }
