@@ -47,16 +47,3 @@ body {
       height: 50vh;
     }
   }
-  
-  .arrow-indicator {
-    margin-bottom: 20px;
-  }
-  
-  .arrow-indicator a {
-    color: #6c6c6c;
-    text-decoration: none;
-  }
-  
-  .arrow-indicator a:hover {
-    color: #bcbcbc;
-  }
