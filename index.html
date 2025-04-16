@@ -1,97 +1,124 @@
 <!DOCTYPE html>
-<html lang="sv">
-  <head>
-    <title>EG-IT Konsult AB</title>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="EG IT-Konsult AB - IT solutions for small businesses and organizations. Specializing in Microsoft Intune, Azure AD, and more.">
-    <meta name="keywords" content="IT, IT-Konsult, Microsoft, Azure, Intune, Jönköping">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="styles.css"> <!-- Link to the external CSS file -->
-  </head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/uikit.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/uikit.js"></script>
+    <script src="js/uikit-icons.js"></script>
+
+    <title>EG IT-Konsult AB</title>
+</head>
 <body>
- <!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar" id="myNavbar">
-    <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
-      <i class="fa fa-bars"></i>
-    </a>
-    <a href="#home" class="w3-bar-item w3-button" aria-label="Go to Start">START</a>
-    <a href="#about" class="w3-bar-item w3-button w3-hide-small" aria-label="About Me"><i class="fa fa-user"></i> OM MIG</a>
-    <a href="#contact" class="w3-bar-item w3-button w3-hide-small" aria-label="Contact"><i class="fa fa-envelope"></i> KONTAKT</a>
-    <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right w3-hover-red" aria-label="Scroll to Top">
-      <i class="fa fa-sort-asc"></i>
-    </a>
-  </div>
-
-  <!-- Navbar on small screens -->
-  <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium">
-    <a href="#about" class="w3-bar-item w3-button" onclick="toggleFunction()">OM MIG</a>
-    <a href="#contact" class="w3-bar-item w3-button" onclick="toggleFunction()">KONTAKT</a>
-    <a href="#" class="w3-bar-item w3-button">SEARCH</a>
-  </div>
-</div>
-
-<!-- First Parallax Image with Logo Text -->
-<div class="bgimg-1 w3-display-container w3-opacity-min" id="home" alt="EG IT-Konsult AB Logo">
-  <div class="w3-display-middle" style="white-space:nowrap;">
-  </div>
-</div>
-
-<!-- Container (About Section) -->
-<div class="w3-content w3-container w3-padding-64" id="about">
-  <h3 class="w3-center">Hej och välkommen!</h3>
-  <p>
-    Jag heter Erik och är en passionerad IT-tekniker som driver detta företag på min fritid.<br>
-    Mitt mål är att hjälpa mindre företag och organisationer med sin teknologiska behov genom skräddarsydda lösningar och innovativa idéer. <br>
-    Min kompetens och erfarenhet är primärt inom Microsoft tjänster så som mail administration, kontohantering och klienthantering.<br>
-    <br>Mitt engagemang sträcker sig bortom bara teknik, Jag är här för att bygga relationer och se till att dina IT-behov inte bara fungerar utan också driver ditt företag framåt. <br>
-    När jag inte arbetar, älskar jag att hålla mig uppdaterad med de senaste teknologitrenderna, delta i IT-konferenser och workshops, <br> och experimentera med nya verktyg och tekniker.<br>
-    <br>Tveka inte att kontakta mig så pratar vi om hur jag kan hjälpa dig!</p>
-</div>
-
-<!-- Container (Contact Section) -->
-<div class="w3-content w3-container w3-padding-64" id="contact">
-  <h3 class="w3-center">KONTAKTA MIG!</h3>
-  <p class="w3-center w3-large">Jag ser fram emot att höra från dig!</p>
-  <div class="w3-row-padding w3-center" style="margin-top:32px;">
-    <div class="w3-col m6 w3-margin-bottom">
-      <div class="w3-card w3-white w3-padding-large w3-hover-shadow">
-        <h4><i class="fa fa-map-marker fa-fw w3-hover-text-black w3-xlarge"></i> Jönköping, Sverige</h4>
-        <p><i class="fa fa-phone fa-fw w3-hover-text-black w3-xlarge"></i> Tel: +46722491410</p>
-        <p><i class="fa fa-envelope fa-fw w3-hover-text-black w3-xlarge"></i> Email: <a href="mailto:info@egit.se">info@egit.se</a></p>
-      </div>
+<!-- Navigation Bar -->
+    <nav class="uk-navbar-container uk-margin-small-left uk-margin-small-right uk-visible@m uk-margin-xlarge-left uk-margin-xlarge-right" uk-navbar uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+    
+    <div class="uk-navbar-left">
+        <a href="" class="uk-navbar-item uk-logo uk-light">EG IT-Konsult AB</a>
     </div>
-  </div>
+    <div class="uk-navbar-right">
+
+        <ul class="uk-navbar-nav uk-light">
+            <li><a class="uk-button-text uk-text-capitalize" href="#about" uk-scroll="offset: 100">OM MIG</a></li>
+            <li><a class="uk-button-text uk-text-capitalize" href="#contact" uk-scroll>KONTAKT</a></li>
+
+        </ul>
+
+    </div>
+</nav>
+<!-- Navigation Bar Ends  -->
+
+<!-- Navigation Bar Mobile -->
+<nav class="uk-navbar-container uk-margin-small-left uk-margin-small-right uk-hidden@m uk-margin-xlarge-left uk-margin-xlarge-right" uk-navbar uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+    
+    <div class="uk-navbar-left">
+        <a href="" class="uk-navbar-item uk-logo uk-light">EG IT-Konsult AB</a>
+    </div>
+    <div class="uk-navbar-right">
+
+        <ul class="uk-navbar-nav uk-light">
+            <li><button uk-toggle="target: #offcanvas-nav" type="button" uk-navbar-toggle-icon></button></li>
+
+        </ul>
+
+    </div>
+</nav>
+<!-- Change This -->
+<div id="offcanvas-nav" uk-offcanvas="overlay: true">
+    <div class="uk-offcanvas-bar uk-flex uk-flex-column">
+
+        <ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+            <li class="uk-active"><a href="#" uk-scroll>Home</a></li>
+            <li class="uk-active"><a href="#about" uk-scroll>OM MIG</a></li>
+            <li class="uk-active"><a href="#contact" uk-scroll>KONTAKT</a></li>
+        </ul>
+
+
+
+
+    </div>
 </div>
+
+<!-- Navigation Bar Mobile Ends -->
+
+<!-- Home -->
+<section class="uk-margin-small-left uk-margin-small-right uk-margin-xlarge-top uk-margin-xlarge-bottom">
+    <h1 class="uk-margin-xlarge-left uk-light uk-text-left uk-margin-xlarge-right">EG IT-Konsult AB <br>Passionerad IT-Konsult för företag och privat.</h1>
+    <a href="#about" class="uk-margin-xlarge-left uk-text-capitalize uk-button uk-button-secondary" uk-scroll="offset: 100">Läs mer</a>
+
+</section>
+
+<!-- Home Ends -->
+<br>
+
+
+<hr class="uk-margin-xlarge-top uk-margin-xlarge-left uk-margin-xlarge-right">
+
+<!-- About Me -->
+<section id="about" class="uk-margin-small-left uk-margin-small-right uk-margin-xlarge-top uk-margin-large-bottom">
+<h3 class="uk-margin-xlarge-left uk-light">OM MIG</h3>
+<!-- Change here to ur paragraph -->
+<p class="uk-margin-xlarge-left uk-margin-xlarge-right">Jag heter Erik och är en passionerad IT-tekniker som driver detta företag på min fritid.</br>
+    Mitt mål är att hjälpa mindre företag eller privatpersoner med sina teknologiska behov genom skräddarsydda lösningar och innovativa idéer.
+    Min kompetens och erfarenhet är primärt inom Microsoft tjänster så som mail administration, kontohantering och klienthantering. </br>
+    
+    Mitt engagemang sträcker sig bortom bara teknik, jag är här för att bygga relationer och se till att dina IT-behov inte bara fungerar utan också driver ditt företag framåt.
+    När jag inte arbetar, älskar jag att hålla mig uppdaterad med de senaste teknologitrenderna, delta i IT-konferenser och workshops,
+    och experimentera med nya verktyg och tekniker. </br>
+    
+    Tveka inte att kontakta mig så pratar vi om hur jag kan hjälpa dig!</p>
+<a href="https://github.com/EG-ITKonsult" class="uk-margin-xlarge-left uk-light uk-button-text" uk-icon="github"></a> &nbsp;<a href="https://linkedin.com/in/erik-gundstedt-a2a25a15b" class=" uk-light uk-button-text" uk-icon="linkedin"></a>
+
+<!-- About Me Ends -->
+
+</section>
+
+<!-- Contact Section -->
+<hr class="uk-margin-xlarge-left uk-margin-large-right">
+<section id="contact" class="uk-margin-small-left uk-margin-small-right uk-margin-large-top uk-margin-large-bottom">
+    <h3 class="uk-margin-xlarge-left uk-light">KONTAKT</h3>
+    <p class="uk-margin-xlarge-left uk-margin-xlarge-right">
+        Du är varmt välkommen att kontakta mig om du har några frågor eller vill diskutera ett samarbete. Jag hjälper gärna till med tekniska lösningar för både företag och privatpersoner.
+    </p>
+
+    <ul class="uk-list uk-list-divider uk-margin-xlarge-left uk-margin-xlarge-right uk-light">
+        <li><strong>E-post:</strong> <a href="mailto:info@egit.se" class="uk-link-text">info@egit.se</a></li>
+        <li><strong>Telefon:</strong> +46722491419</li>
+        <li><strong>Plats:</strong> Jönköping, Sverige</li>
+    </ul>
+</section>
+<hr class="uk-margin-large-left uk-margin-large-right">
+
+<!-- Contact Section Ends -->
 
 <!-- Footer -->
-<footer class="w3-center w3-white w3-padding-64 w3-opacity w3-hover-opacity-on">
-  <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
-  <p><a href="mailto:info@egit.se" title="EG IT-Konsult AB" target="_blank" class="w3-hover-opacity">EG IT-Konsult AB</a></p>
-</footer>
-  <script>
-  // Change style of navbar on scroll
-  window.addEventListener("scroll", () => {
-  const navbar = document.getElementById("myNavbar");
-  if (window.scrollY > 100) {
-    navbar.classList.add("w3-card", "w3-animate-top", "w3-white");
-  } else {
-    navbar.classList.remove("w3-card", "w3-animate-top", "w3-white");
-  }
-});
+<footer class="uk-section uk-section-secondary uk-padding-small uk-text-center uk-light">
+    <a href="#" uk-scroll class="uk-button uk-button-default uk-margin-small-top">Till toppen</a>
+    </footer>
 
-  // Used to toggle the menu on small screens when clicking on the menu button
-  function toggleFunction() {
-  var x = document.getElementById("navDemo");
-  if (x.className.indexOf("w3-show") == -1) {
-    x.className += " w3-show";
-  } else {
-    x.className = x.className.replace(" w3-show", "");
-  }
-  }
-  </script>
+<!-- Footer Ends -->
+ 
 </body>
 </html>
