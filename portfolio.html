@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EG IT-Konsult AB</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper:    #f5f0e8;
+  --paper2:   #ede7d5;
+  --paper3:   #e2dbc9;
+  --ink:      #2a2118;
+  --ink-light:#5a4a35;
+  --ink-faint:#9a8870;
+  --accent:   #c84b2f;
+  --green:    #3d6e5a;
+  --tape:     rgba(210,195,160,0.55);
+  --path-w:   700px;
+}
+
+html { scroll-behavior: auto; }
+
+body {
+  background: var(--paper3);
+  color: var(--ink);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M5 2L15 10L9 11L12 18L10 18L7 11L3 13Z' fill='%232a2118' stroke='%23f5f0e8' stroke-width='0.5'/%3E%3C/svg%3E") 3 1, crosshair;
+}
+
+/* noise overlay */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:9999;
+  opacity:0.045;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:180px 180px;
+}
+
+/* ─── FIXED VIEWPORT (what user sees) ─── */
+#viewport {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ─── SCROLL TRACK (tall, drives scroll progress) ─── */
+#scroll-track {
+  position: relative;
+  width: 100%;
+}
+
+/* ─── WORLD (moves up as user scrolls) ─── */
+#world {
+  position: fixed;
+  inset: 0;
+  will-change: transform;
+}
+
+/* ─── BACKGROUND LAYERS (parallax) ─── */
+.bg-layer {
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* ruled lines across entire world */
+#ruled-lines {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ─── THE PATH SVG ─── */
+#path-svg {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--path-w);
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* ─── SECTION CARDS ─── */
+.section-card {
+  position: absolute;
+  width: 340px;
+  background: var(--paper);
+  border: 1.5px solid rgba(42,33,24,0.18);
+  padding: 1.75rem 2rem;
+  transform-origin: center;
+  transition: box-shadow 0.3s;
+}
+.section-card::after {
+  content:'';
+  position:absolute; bottom:0; right:0;
+  width:0; height:0;
+  border-style:solid;
+  border-width:0 0 22px 22px;
+  border-color:transparent transparent var(--paper3) transparent;
+}
+/* tape strip */
+.section-card .tape {
+  position:absolute;
+  width:56px; height:18px;
+  background:var(--tape);
+  border-radius:2px;
+  top:-9px; left:50%;
+  transform:translateX(-50%) rotate(var(--tr, -1.5deg));
+}
+.section-card h2 {
+  font-family:'Caveat',cursive;
+  font-size:1.9rem;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:0.5rem;
+}
+.section-card h2 .br { color:var(--accent); }
+.section-card p, .section-card li {
+  font-size:1rem;
+  color:var(--ink-light);
+  line-height:1.65;
+}
+.section-card ul { padding-left:1.1rem; }
+.section-card ul li { margin-bottom:0.2rem; }
+.section-card .label {
+  font-family:'Caveat',cursive;
+  font-size:0.78rem;
+  color:var(--ink-faint);
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  margin-bottom:0.4rem;
+  display:flex; align-items:center; gap:6px;
+}
+.section-card .label::before {
+  content:''; display:inline-block;
+  width:16px; height:1.5px;
+  background:var(--ink-faint);
+}
+.tag-row { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:0.75rem; }
+.tag {
+  font-family:'Caveat',cursive;
+  font-size:0.85rem;
+  padding:0.15rem 0.6rem;
+  border:1.5px solid var(--ink);
+  border-radius:2px;
+  background:var(--paper);
+}
+.stamp {
+  position:absolute;
+  border:2.5px solid var(--accent);
+  padding:0.2rem 0.6rem;
+  font-family:'Caveat',cursive;
+  font-size:0.75rem;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  opacity:0.75;
+  border-radius:2px;
+}
+.skill-row { margin-top:0.5rem; }
+.skill-label {
+  font-family:'Caveat',cursive;
+  font-size:1rem;
+  color:var(--ink);
+  display:flex; justify-content:space-between;
+  margin-bottom:2px;
+}
+.skill-track {
+  height:5px;
+  background:rgba(42,33,24,0.1);
+  border-radius:3px;
+  margin-bottom:6px;
+  overflow:hidden;
+}
+.skill-fill {
+  height:100%;
+  background:var(--ink);
+  border-radius:3px;
+  width:0;
+  transition:width 1s ease;
+}
+
+/* ─── CAT CHARACTER ─── */
+#cat-wrap {
+  position: fixed;
+  pointer-events: none;
+  z-index: 500;
+  width: 90px;
+  height: 90px;
+  transform: translate(-50%, -50%);
+  transition: left 0.05s linear, top 0.05s linear;
+}
+
+#cat-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* cat speech bubble */
+#cat-bubble {
+  position: absolute;
+  bottom: 88px;
+  left: 50%;
+  transform: translateX(-30%);
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  border-radius: 8px 8px 8px 2px;
+  padding: 0.4rem 0.75rem;
+  font-family: 'Caveat', cursive;
+  font-size: 0.9rem;
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s;
+  min-width: 100px;
+  text-align: center;
+  pointer-events: none;
+}
+#cat-bubble.show { opacity: 1; }
+#cat-bubble::after {
+  content:'';
+  position:absolute; bottom:-8px; left:14px;
+  width:0; height:0;
+  border-left:8px solid transparent;
+  border-right:0px solid transparent;
+  border-top:8px solid var(--ink);
+}
+#cat-bubble::before {
+  content:'';
+  position:absolute; bottom:-6px; left:15px;
+  width:0; height:0;
+  border-left:7px solid transparent;
+  border-right:0px solid transparent;
+  border-top:7px solid var(--paper);
+  z-index:1;
+}
+
+/* ─── NAV ─── */
+#nav {
+  position: fixed;
+  top: 1.5rem; right: 1.75rem;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: right;
+}
+.nav-dot {
+  font-family:'Caveat',cursive;
+  font-size:0.9rem;
+  color:var(--ink-faint);
+  cursor:pointer;
+  transition:color 0.2s;
+  text-decoration:none;
+  letter-spacing:0.04em;
+}
+.nav-dot.active, .nav-dot:hover { color:var(--ink); font-weight:600; }
+
+/* ─── PROGRESS BAR ─── */
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 700;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ─── HERO title (fixed center, fades out) ─── */
+#hero-title {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 100;
+  transition: opacity 0.4s;
+}
+#hero-title .eyebrow {
+  font-family:'Caveat',cursive;
+  font-size:1rem;
+  color:var(--ink-faint);
+  letter-spacing:0.1em;
+  margin-bottom:0.5rem;
+}
+#hero-title h1 {
+  font-family:'Caveat',cursive;
+  font-size:clamp(3rem,7vw,5.5rem);
+  font-weight:700;
+  line-height:0.95;
+  color:var(--ink);
+  position:relative;
+}
+#hero-title .sub {
+  font-size:1.1rem;
+  font-style:italic;
+  color:var(--ink-light);
+  margin-top:1rem;
+  font-weight:300;
+}
+.hero-underline {
+  position:absolute;
+  bottom:-6px; left:0;
+  width:100%; height:8px;
+  overflow:visible;
+}
+
+/* ─── DECORATIVE elements ─── */
+.deco-circle {
+  position:absolute;
+  border-radius:50%;
+  border:1.5px dashed rgba(42,33,24,0.12);
+  pointer-events:none;
+}
+
+/* ─── SCROLL HINT ─── */
+#scroll-hint {
+  position:fixed;
+  bottom:2rem; left:50%;
+  transform:translateX(-50%);
+  font-family:'Caveat',cursive;
+  font-size:0.95rem;
+  color:var(--ink-faint);
+  display:flex; align-items:center; gap:0.5rem;
+  z-index:300;
+  animation: fadeHint 3s ease infinite;
+  transition: opacity 0.5s;
+}
+@keyframes fadeHint {
+  0%,100%{opacity:0.4} 50%{opacity:1}
+}
+
+/* cat tail wag */
+@keyframes tailWag {
+  0%,100%{transform:rotate(0deg)} 50%{transform:rotate(18deg)}
+}
+@keyframes earTwitch {
+  0%,90%,100%{transform:rotate(0deg)} 95%{transform:rotate(-12deg)}
+}
+@keyframes bodyBob {
+  0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)}
+}
+.cat-body-group { animation:bodyBob 0.9s ease-in-out infinite; }
+.cat-tail { transform-origin:5px 5px; animation:tailWag 0.7s ease-in-out infinite; }
+.cat-ear-l { transform-origin:8px 20px; animation:earTwitch 3s ease infinite; }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Fixed nav -->
+<nav id="nav">
+  <span class="nav-dot active" data-section="0">Start</span>
+  <span class="nav-dot" data-section="1">Om mig</span>
+  <span class="nav-dot" data-section="2">Expertis</span>
+  <span class="nav-dot" data-section="3">Kontakt</span>
+</nav>
+
+<!-- Cat guide -->
+<div id="cat-wrap">
+  <div id="cat-bubble">Scroll to begin! ↓</div>
+  <svg id="cat-svg" viewBox="-10 -10 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- shadow -->
+    <ellipse cx="45" cy="96" rx="22" ry="5" fill="rgba(42,33,24,0.12)"/>
+
+    <g class="cat-body-group">
+      <!-- tail -->
+      <g class="cat-tail" style="transform-origin:28px 72px">
+        <path d="M28,72 Q10,68 8,55 Q6,44 16,42" stroke="#c84b2f" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <circle cx="16" cy="41" r="5" fill="#c84b2f"/>
+      </g>
+
+      <!-- body -->
+      <ellipse cx="45" cy="68" rx="22" ry="20" fill="#f5f0e8" stroke="#2a2118" stroke-width="2"/>
+      <!-- belly spot -->
+      <ellipse cx="45" cy="71" rx="12" ry="11" fill="#ede7d5" stroke="none"/>
+      <!-- stripes -->
+      <path d="M34,58 Q38,54 42,58" stroke="#c8a878" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <path d="M36,63 Q40,60 44,63" stroke="#c8a878" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+
+      <!-- neck -->
+      <rect x="37" y="46" width="16" height="10" rx="4" fill="#f5f0e8" stroke="#2a2118" stroke-width="2"/>
+
+      <!-- head -->
+      <ellipse cx="45" cy="36" rx="22" ry="20" fill="#f5f0e8" stroke="#2a2118" stroke-width="2"/>
+
+      <!-- ears -->
+      <g class="cat-ear-l">
+        <polygon points="23,22 16,8 32,16" fill="#f5f0e8" stroke="#2a2118" stroke-width="2" stroke-linejoin="round"/>
+        <polygon points="24,21 18,11 30,17" fill="#f5c0b0" stroke="none"/>
+      </g>
+      <!-- right ear -->
+      <polygon points="57,16 68,6 62,22" fill="#f5f0e8" stroke="#2a2118" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="57,17 65,9 61,21" fill="#f5c0b0" stroke="none"/>
+
+      <!-- eyes -->
+      <ellipse cx="36" cy="34" rx="5" ry="6" fill="white" stroke="#2a2118" stroke-width="1.5"/>
+      <ellipse cx="54" cy="34" rx="5" ry="6" fill="white" stroke="#2a2118" stroke-width="1.5"/>
+      <circle cx="37" cy="35" r="3.5" fill="#2a2118"/>
+      <circle cx="55" cy="35" r="3.5" fill="#2a2118"/>
+      <circle cx="38.5" cy="33.5" r="1.2" fill="white"/>
+      <circle cx="56.5" cy="33.5" r="1.2" fill="white"/>
+
+      <!-- nose -->
+      <polygon points="45,42 42,44 48,44" fill="#c84b2f" stroke="none"/>
+      <!-- mouth -->
+      <path d="M42,44 Q45,48 48,44" stroke="#2a2118" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+
+      <!-- whiskers left -->
+      <line x1="24" y1="41" x2="39" y2="43" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+      <line x1="23" y1="44" x2="39" y2="44.5" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+      <line x1="25" y1="47" x2="39" y2="46" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+      <!-- whiskers right -->
+      <line x1="51" y1="43" x2="66" y2="41" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+      <line x1="51" y1="44.5" x2="67" y2="44" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+      <line x1="51" y1="46" x2="65" y2="47" stroke="#2a2118" stroke-width="1" stroke-linecap="round"/>
+
+      <!-- collar -->
+      <path d="M33,46 Q45,52 57,46" stroke="#c84b2f" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <circle cx="45" cy="51" r="3" fill="#f5c832" stroke="#2a2118" stroke-width="1"/>
+
+      <!-- front legs -->
+      <path d="M32,82 Q28,90 30,96" stroke="#2a2118" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="30" cy="97" rx="6" ry="3.5" fill="#f5f0e8" stroke="#2a2118" stroke-width="1.5"/>
+      <path d="M58,82 Q62,90 60,96" stroke="#2a2118" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <ellipse cx="60" cy="97" rx="6" ry="3.5" fill="#f5f0e8" stroke="#2a2118" stroke-width="1.5"/>
+    </g>
+  </svg>
+</div>
+
+<!-- Hero title (fixed, fades) -->
+<div id="hero-title">
+  <h1>
+    EG IT-Konsult AB
+    <svg class="hero-underline" viewBox="0 0 400 10" fill="none">
+      <path d="M2,7 C60,2 120,9 180,5 C240,1 300,8 360,5 C380,3 395,6 400,5" stroke="#c84b2f" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.75"/>
+    </svg>
+  </h1>
+  <p class="sub">Passionerad IT-Konsult för företag och privatkunder.</p>
+</div>
+
+<!-- Scroll hint -->
+<div id="scroll-hint">↓ skrolla ned för att utforska</div>
+
+<!-- THE TALL SCROLL TRACK — height set by JS -->
+<div id="scroll-track"></div>
+
+<!-- THE WORLD (positioned, scrolled via JS) -->
+<div id="world">
+
+  <!-- ruled lines bg -->
+  <svg id="ruled-lines" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <!-- decorative circles -->
+  <div class="deco-circle" style="width:320px;height:320px;top:200px;right:5%;opacity:0.5;"></div>
+  <div class="deco-circle" style="width:180px;height:180px;top:900px;left:8%;opacity:0.4;"></div>
+  <div class="deco-circle" style="width:240px;height:240px;top:1500px;right:10%;opacity:0.35;"></div>
+
+  <!-- The winding path SVG -->
+  <svg id="path-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+
+  <!-- Section cards — positioned by JS -->
+  <div class="section-card" id="card-about" style="--rot:-1.5deg">
+    <div class="tape" style="--tr:-2deg"></div>
+    <h2><span class="br">[</span> Om mig <span class="br">]</span></h2>
+    <p>Hej! Jag heter Erik och är en engagerad IT-tekniker som driver det här företaget vid sidan av mitt ordinarie arbete. Min passion är att hjälpa småföretag och privatpersoner att hitta smarta, skräddarsydda IT-lösningar som förenklar vardagen och stärker verksamheten. Jag har bred erfarenhet inom Microsofts ekosystem – allt från mailadministration och kontohantering till klientdrift.</p>
+    <p style="margin-top:0.5rem;">För mig handlar IT inte bara om teknik, utan också om att skapa långsiktiga relationer och se till att varje lösning verkligen gör skillnad. På fritiden håller jag mig ständigt uppdaterad med de senaste trenderna inom IT, deltar i konferenser och workshops, och testar gärna nya verktyg och tekniker. Tveka inte att höra av dig – jag ser fram emot att prata mer om hur jag kan hjälpa just dig!</p>
+  </div>
+
+  <div class="section-card" id="card-skills" style="--rot:1deg; width:360px;">
+    <div class="tape" style="--tr:1.5deg"></div>
+    <h2><span class="br">[</span> Expertis <span class="br">]</span></h2>
+    <div class="skill-row">
+      <div class="skill-label"><span>Microsoft 365</span></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-label"><span>Enhetshantering</span></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-label"><span>Identitet & Säkerhet</span></div>
+    </div>
+    <div class="skill-row">
+      <div class="skill-label"><span>Applikationspaketering</span></div>
+    </div>
+  </div>
+
+  <div class="section-card" id="card-contact" style="--rot:-0.5deg; width:380px; text-align:center;">
+    <div class="tape" style="--tr:-0.5deg"></div>
+    <h2 style="font-size:2.5rem; margin-bottom:0.3rem"><span class="br">[</span> Kontakta mig <span class="br">]</span></h2>
+    <p style="font-style:italic; margin-bottom:1.25rem;">Du är varmt välkommen att kontakta mig om du har några frågor eller vill diskutera ett samarbete.</p>
+    <div style="display:flex; flex-direction:column; gap:0.6rem; align-items:center;">
+      <a href="mailto:info@egit.se" style="font-family:'Caveat',cursive;font-size:1.05rem;color:var(--ink);text-decoration:none;padding:0.4rem 1.5rem;border:1.5px solid var(--ink);background:var(--paper);display:inline-block;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='var(--ink)';this.style.color='var(--paper)'" onmouseout="this.style.background='var(--paper)';this.style.color='var(--ink)'">✉ info@egit.se</a>
+      <a href="https://www.linkedin.com/in/erik-gundstedt-a2a25a15b/" style="font-family:'Caveat',cursive;font-size:1.05rem;color:var(--ink);text-decoration:none;padding:0.4rem 1.5rem;border:1.5px solid var(--ink);background:var(--paper);display:inline-block;transition:background 0.2s,color 0.2s;" onmouseover="this.style.background='var(--ink)';this.style.color='var(--paper)'" onmouseout="this.style.background='var(--paper)';this.style.color='var(--ink)'">in LinkedIn</a>
+    </div>
+  </div>
+
+</div><!-- #world -->
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────
+const VW = () => window.innerWidth;
+const VH = () => window.innerHeight;
+
+// Winding path: defined in "world-space" (x relative to path-svg center, y absolute in world)
+// The path-svg is centered horizontally and positioned absolutely in #world
+// Path points: [cx_fraction_of_viewport, world_y]
+// cx_fraction: 0 = center, -0.3 = left, 0.3 = right (fraction of viewport half-width)
+
+const WORLD_HEIGHT = 2400; // total scrollable world height in px
+const PATH_W = 700;
+
+// The winding path points (x: -1 to 1, where 0=center of path-svg, y: 0 to WORLD_HEIGHT)
+// These are in path-svg local coordinates (width=PATH_W, centered)
+const pathNodes = [
+  { x: 0,    y: 80 },    // start / hero
+  { x: -160, y: 480 },   // about card left
+  { x: 80,   y: 820 },   // curves right
+  { x: 160,  y: 1200 },  // skills card right
+  { x: -80,  y: 1600 },  // curves left toward contact
+  { x: 0,    y: 1950 },  // contact center
+  { x: 0,    y: 2350 },  // end
+];
+
+// Where section cards should sit (world y, left/right side, card id)
+const SECTIONS = [
+  { id:'card-about',   worldY: 520,  side:'left'  },
+  { id:'card-skills',  worldY: 1230, side:'right' },
+  { id:'card-contact', worldY: 1980, side:'center'},
+];
+
+// Cat bubble messages per progress zone
+const BUBBLES = [
+  { at: 0.0,  msg: "Skrolla ned för att utforska! ↓" },
+  { at: 0.12, msg: "Trevligt att träffas! 😺" },
+  { at: 0.35, msg: "Detta kan jag!" },
+  { at: 0.65, msg: "Vi hörs!" },
+  { at: 0.95, msg: "Nu tog sidan slut! 🐾" },
+];
+
+// ─── BUILD RULED LINES ─────────────────────────────────────────────────────
+function buildRuledLines() {
+  const svg = document.getElementById('ruled-lines');
+  const count = Math.ceil(WORLD_HEIGHT / 38) + 2;
+  let html = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="${WORLD_HEIGHT}" viewBox="0 0 1400 ${WORLD_HEIGHT}">`;
+  for (let i = 0; i < count; i++) {
+    const y = i * 38 + 22;
+    html += `<line x1="0" y1="${y}" x2="1400" y2="${y}" stroke="rgba(42,33,24,0.065)" stroke-width="1"/>`;
+  }
+  // margin line left
+  html += `<line x1="80" y1="0" x2="80" y2="${WORLD_HEIGHT}" stroke="rgba(200,75,47,0.12)" stroke-width="1.5"/>`;
+  html += `</svg>`;
+  svg.innerHTML = html;
+  svg.style.height = WORLD_HEIGHT + 'px';
+}
+
+// ─── BUILD PATH SVG ────────────────────────────────────────────────────────
+let pathEl, totalPathLength;
+
+function buildPath() {
+  const svg = document.getElementById('path-svg');
+  svg.style.top = '0px';
+  svg.setAttribute('width', PATH_W);
+  svg.setAttribute('height', WORLD_HEIGHT);
+  svg.setAttribute('viewBox', `${-PATH_W/2} 0 ${PATH_W} ${WORLD_HEIGHT}`);
+
+  // Build smooth cubic bezier through pathNodes
+  let d = `M ${pathNodes[0].x} ${pathNodes[0].y}`;
+  for (let i = 1; i < pathNodes.length; i++) {
+    const prev = pathNodes[i-1];
+    const curr = pathNodes[i];
+    const dy = curr.y - prev.y;
+    // control points: vertical tangents with some horizontal swing
+    const cp1x = prev.x + (curr.x - prev.x) * 0.4;
+    const cp1y = prev.y + dy * 0.5;
+    const cp2x = curr.x - (curr.x - prev.x) * 0.4;
+    const cp2y = curr.y - dy * 0.3;
+    d += ` C ${cp1x} ${cp1y} ${cp2x} ${cp2y} ${curr.x} ${curr.y}`;
+  }
+
+  svg.innerHTML = `
+    <defs>
+      <filter id="roughen">
+        <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="2" result="noise" seed="3"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+    <!-- shadow path -->
+    <path d="${d}" stroke="rgba(42,33,24,0.06)" stroke-width="22" fill="none" stroke-linecap="round" filter="url(#roughen)"/>
+    <!-- main road -->
+    <path id="the-path" d="${d}" stroke="rgba(42,33,24,0.18)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="30 8" filter="url(#roughen)"/>
+    <!-- center dashed line -->
+    <path d="${d}" stroke="rgba(200,75,47,0.3)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="18 14" stroke-dashoffset="0"/>
+  `;
+
+  pathEl = svg.querySelector('#the-path');
+  totalPathLength = pathEl.getTotalLength();
+}
+
+// ─── POSITION CARDS ────────────────────────────────────────────────────────
+function positionCards() {
+  const vw = VW();
+  const centerX = vw / 2;
+
+  SECTIONS.forEach(s => {
+    const card = document.getElementById(s.id);
+    if (!card) return;
+    const cardW = card.offsetWidth;
+    const cardH = card.offsetHeight;
+
+    let left;
+    if (s.side === 'left') {
+      left = centerX - PATH_W/2 - cardW - 32;
+      // clamp
+      if (left < 16) left = 16;
+    } else if (s.side === 'right') {
+      left = centerX + PATH_W/2 + 32;
+      if (left + cardW > vw - 16) left = vw - cardW - 16;
+    } else { // center
+      left = centerX - cardW/2;
+    }
+
+    card.style.left = left + 'px';
+    card.style.top = (s.worldY - cardH/2) + 'px';
+    card.style.opacity = '0';
+    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  });
+}
+
+// ─── SCROLL DRIVER ─────────────────────────────────────────────────────────
+const world = document.getElementById('world');
+const scrollTrack = document.getElementById('scroll-track');
+const heroTitle = document.getElementById('hero-title');
+const scrollHint = document.getElementById('scroll-hint');
+const progressBar = document.getElementById('progress-bar');
+const catWrap = document.getElementById('cat-wrap');
+const catBubble = document.getElementById('cat-bubble');
+const navDots = document.querySelectorAll('.nav-dot');
+
+// Set scroll track height
+function setTrackHeight() {
+  const maxScroll = WORLD_HEIGHT - VH();
+  scrollTrack.style.height = WORLD_HEIGHT + 'px';
+}
+
+let bubbleTimer = null;
+let lastBubbleIdx = -1;
+
+function showBubble(msg) {
+  catBubble.textContent = msg;
+  catBubble.classList.add('show');
+  clearTimeout(bubbleTimer);
+  bubbleTimer = setTimeout(() => catBubble.classList.remove('show'), 3200);
+}
+
+function onScroll() {
+  const scrollY = window.scrollY;
+  const maxScroll = WORLD_HEIGHT - VH();
+  const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
+  // Progress bar
+  progressBar.style.width = (progress * 100) + '%';
+
+  // Move world upward
+  world.style.transform = `translateY(${-scrollY}px)`;
+
+  // Hero title fade out
+  const heroFade = Math.max(0, 1 - progress * 8);
+  heroTitle.style.opacity = heroFade;
+  scrollHint.style.opacity = heroFade > 0.3 ? 1 : 0;
+
+  // Move cat along path
+  if (pathEl && totalPathLength) {
+    const pathProgress = Math.min(progress, 0.99);
+    const dist = pathProgress * totalPathLength;
+    const pt = pathEl.getPointAtLength(dist);
+    const ptAhead = pathEl.getPointAtLength(Math.min(dist + 10, totalPathLength));
+
+    // Convert path-local coords to viewport coords
+    // path-svg is centered at vw/2, so:
+    const vw = VW();
+    const screenX = vw/2 + pt.x;
+    // worldY - scrollY = screenY
+    const screenY = pt.y - scrollY;
+
+    catWrap.style.left = screenX + 'px';
+    catWrap.style.top  = screenY + 'px';
+
+    // Flip cat based on direction
+    const dx = ptAhead.x - pt.x;
+    const catSvg = document.getElementById('cat-svg');
+    catSvg.style.transform = dx < -2 ? 'scaleX(-1)' : dx > 2 ? 'scaleX(1)' : catSvg.style.transform;
+  }
+
+  // Card visibility
+  SECTIONS.forEach((s, i) => {
+    const card = document.getElementById(s.id);
+    if (!card) return;
+    const cardWorldY = s.worldY;
+    // card center in screen coords
+    const cardScreenY = cardWorldY - scrollY;
+    const inView = cardScreenY > -200 && cardScreenY < VH() + 200;
+    if (inView) {
+      card.style.opacity = '1';
+      card.style.transform = `rotate(var(--rot, 0deg)) translateY(0)`;
+      // trigger skill bars
+      card.querySelectorAll('.skill-fill').forEach(b => {
+        if (!b.dataset.done) {
+          b.style.width = b.dataset.w + '%';
+          b.dataset.done = 1;
+        }
+      });
+    } else {
+      card.style.opacity = '0';
+      card.style.transform = `rotate(var(--rot, 0deg)) translateY(20px)`;
+    }
+  });
+
+  // Bubble messages
+  let bIdx = 0;
+  for (let i = BUBBLES.length - 1; i >= 0; i--) {
+    if (progress >= BUBBLES[i].at) { bIdx = i; break; }
+  }
+  if (bIdx !== lastBubbleIdx) {
+    lastBubbleIdx = bIdx;
+    showBubble(BUBBLES[bIdx].msg);
+  }
+
+  // Nav active state — find which section is nearest
+  let nearestNav = 0;
+  const navThresholds = [0, 0.12, 0.38, 0.68];
+  for (let i = navThresholds.length - 1; i >= 0; i--) {
+    if (progress >= navThresholds[i]) { nearestNav = i; break; }
+  }
+  navDots.forEach((d, i) => d.classList.toggle('active', i === nearestNav));
+}
+
+// Nav click — scroll to section
+navDots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    const thresholds = [0, 0.14, 0.40, 0.72];
+    const maxScroll = WORLD_HEIGHT - VH();
+    window.scrollTo({ top: thresholds[i] * maxScroll, behavior: 'smooth' });
+  });
+});
+
+// ─── INIT ──────────────────────────────────────────────────────────────────
+function init() {
+  buildRuledLines();
+  buildPath();
+  setTrackHeight();
+  positionCards();
+  onScroll();
+
+  // Show first bubble after delay
+  setTimeout(() => showBubble("Scroll to explore! ↓"), 1200);
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', () => {
+  setTrackHeight();
+  positionCards();
+  onScroll();
+});
+
+// Wait for fonts
+document.fonts.ready.then(init);
+</script>
+</body>
+</html>
